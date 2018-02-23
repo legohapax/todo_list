@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="http://todomvc.com/examples/vanilla-es6/node_modules/todomvc-common/base.css">
+    <link rel="stylesheet" href="http://todomvc.com/examples/vanilla-es6/node_modules/todomvc-app-css/index.css">
+    <title>Lecture 01</title>
+</head>
+
+<body>
+    <section class="todoapp">
+        <header class="header">
+            <h1>todos</h1>
+            <input class="new-todo" placeholder="What needs to be done?" autofocus>
+        </header>
+        <section class="main">
+            <input class="toggle-all" type="checkbox">
+            <label for="toggle-all">Mark all as complete</label>
+            <ul class="todo-list"></ul>
+            <footer class="footer">
+                <span class="todo-count"></span>
+                <div class="filters">
+                    <a href="#/" class="selected">All</a>
+                    <a href="#/active">Active</a>
+                    <a href="#/completed">Completed</a>
+                </div>
+                <button class="clear-completed">Clear completed</button>
+            </footer>
+        </section>
+    </section>
+
+    <footer class="info">
+        <p>Double-click to edit a todo</p>
+        <p>Created by
+            <a href="http://twitter.com/oscargodson">Oscar Godson</a>
+        </p>
+        <p>Refactored by
+            <a href="https://github.com/cburgmer">Christoph Burgmer</a>
+        </p>
+        <p>Part of
+            <a href="http://todomvc.com">TodoMVC</a>
+        </p>
+    </footer>
+
+    <script>
+        var state = {
+            todos: [
+                //{ text: 'Hi', completed: true  },
+                //{ text: 'Hello', completed: false },
+                //{ text: 'Hi there!', completed: true },
+            ],
+            filter: 'all'
+        };
+
+
+        document.querySelector(".new-todo").addEventListener("keypress", function (e) {
+            var key = e.which //|| e.keyCode;
+            if (key === 13) {
+                // pushes the new todo to the object state.todos
+                todo_text = document.querySelector(".new-todo").value;
+                var targetEl = document.querySelector(".todo-list");
+
+                // checking whether the inputed todo isnt already on todo list in state object
+                if (!is_todo_already_a_todo(todo_text, state)) {
+                    // adding a new todo to the state object
+                    todo = { text: todo_text, completed: false };
+                    state.todos.push(todo);
+                    // rendering todos based on the object state
+                    //var el = createTodo(todo.text);
+                    //targetEl.appendChild(el);
+                } else {
+                    alert("This todo is already in your todo list. Please choose different name.")
+                }
+
+                // renders todos based on the object state
+
+                for (var i = 0; i < state.todos.length; i++) {
+                    var todo = state.todos[i];
+                    // checking if todo is already there
+
+                    if (!is_todo_rendered(todo.text)) {
+
+                        var el = createTodo(todo.text);
+                        targetEl.appendChild(el);
+                    }
+                }
+            }
+
+
+
+
+
+        });
+
+
+        ////////////////////////////////////////////////////////    
+        function is_todo_already_a_todo(text, state) {
+            x = false;
+            for (var i = 0; i < state.todos.length; i++) {
+
+                //console.log(state.todos.length + text + " " + state.todos[i].text)
+
+                if (text === state.todos[i].text) {
+                    x = true;
+                }
+            }
+            return x;
+        }
+
+        function is_todo_rendered(text) {
+            // determines whether the todo from user input is already rendered
+            rendered_todos = document.getElementsByClassName("view");
+            x = false;
+
+            for (var i = 0; i < rendered_todos.length; i++) {
+                displayed_todo = rendered_todos[i].children[1].textContent;
+
+                if (text === displayed_todo) {
+                    x = true;
+                }
+            }
+            return x;
+        }
+
+
+        function createTodo(text) {
+            var input = document.createElement("input");
+            input.type = "checkbox";
+            input.classList.add("toggle");
+
+            var label = document.createElement("label");
+            label.innerHTML = text;
+
+            var button = document.createElement("button");
+            button.classList.add("destroy");
+
+            var view = document.createElement("div");
+            view.classList.add("view");
+
+            var li = document.createElement("li");
+
+            view.appendChild(input);
+            view.appendChild(label);
+            view.appendChild(button);
+            li.appendChild(view);
+
+            var targetEl = document.querySelector(".todo-list");
+
+            return li;
+        }
+        var targetEl = document.querySelector(".todo-list");
+
+
+
+        // function renderTodo(text,targetEl) {
+        //     targetEl.innerHTML = `
+        //     <li>
+        //     <div class="view">
+        //         <input class="toggle" type="checkbox">
+        //         <label>${ text }</label>
+        //         <button class="destroy"></button>
+        //     </div>
+        //     </li>
+        //     `
+        // }
+
+        /*
+        Template:
+
+        <li>
+            <div class="view">
+                <input class="toggle" type="checkbox">
+                <label>aaa</label>
+                <button class="destroy"></button>
+            </div>
+        </li>
+        */
+    </script>
+
+</body>
+
+</html>
